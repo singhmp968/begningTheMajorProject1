@@ -2,6 +2,8 @@ const express  = require('express');
 const app = express();
 const port = 8000;
 
+// uses express route
+app.use('/',require('./routes'))
 
 
 
