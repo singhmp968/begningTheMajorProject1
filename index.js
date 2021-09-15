@@ -3,7 +3,7 @@ const app = express();
 const port = 8000;
 
 // uses express route
-app.use('/',require('./routes'))
+app.use('/',require('./routes')) // any request is comming required the index of route
 
 
 
