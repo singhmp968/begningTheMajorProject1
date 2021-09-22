@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <title>
+            <%= title%>
+        </title>
+        <link rel="stylesheet" href="/css/layout.css">
+        <!-- whenever there ;is link tag or script tag in the body  it will automaticall put it over  <%- style %> and <%- script %>-->
+        <%- style %>
+    </head>
+
+    <body>
+        <%- include('_header'); -%>
+
+        <!-- <h1>Codeial / <%= title %></h1> -->
+        <%- body %> <!--here th e body part of home and userhome is going to run-->
+        <%- include('_footer'); -%>
+        <%- script %>
+    </body>
+</html>
