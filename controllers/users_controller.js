@@ -1,7 +1,7 @@
 const User = require('../models/user')
 
 module.exports.profile = function(req,res){
-  
+  //**** */ we are getting cookie from request but we have to manipulate it with res*****
   if(req.cookies.user_id){
       User.findById(req.cookies.user_id,function(err,user){
           if(user){
