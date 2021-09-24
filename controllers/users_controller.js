@@ -13,6 +13,9 @@ module.exports.userPost = function(req,res){
 }
 // creating sign up
 module.exports.signUp = function(req,res){
+    if(req.isAuthenticated()){
+        return res.redirect('/user/profile')
+    }
     return res.render('user_signup',{
         title:'codeial | signup '
     })
@@ -21,6 +24,9 @@ module.exports.signUp = function(req,res){
 
 //creating sign in
 module.exports.signin = function(req,res){
+    if(req.isAuthenticated()){
+       return res.redirect('/user/profile')
+    }
     return res.render('user_signin',{
         title:'codeial | signin'
     })
@@ -50,5 +56,11 @@ module.exports.create = function(req,res){
 }
 // here we are creating session i.e handling signin page for the user
 module.exports.createSession = function(req,res){
-    //TODO:Later
+    return res.redirect('/')
+}
+
+module.exports.destroySession = function(req,res){
+    req.logout() // logout is given to req by passport.js
+    
+    return res.redirect('/')
 }
