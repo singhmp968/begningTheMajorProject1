@@ -4,6 +4,9 @@
             <%= title%>
         </title>
         <link rel="stylesheet" href="/css/layout.css">
+      <!-- adding style using scss for header and footer files -->
+        <link rel="stylesheet" href="/css/header.css">
+        <link rel="stylesheet" href="/css/footer.css">
         <!-- whenever there ;is link tag or script tag in the body  it will automaticall put it over  <%- style %> and <%- script %>-->
         <%- style %>
     </head>
@@ -12,7 +15,9 @@
         <%- include('_header'); -%>
 
         <!-- <h1>Codeial / <%= title %></h1> -->
-        <%- body %> <!--here th e body part of home and userhome is going to run-->
+        <main id="layout-main">
+            <%- body %> <!--here th e body part of home and userhome is going to run-->
+         </main>
         <%- include('_footer'); -%>
         <%- script %>
     </body>

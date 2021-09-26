@@ -12,6 +12,14 @@ const MongoStore = require('connect-mongo')(session); // here  connect mongo reu
 
 //const { use } = require('./routes');
 
+const sassmiddleWare = require('node-sass-middleware');
+app.use(sassmiddleWare({
+    src:'./assets/scss',
+    dest:'./assets/css',
+    debug:true, // this will be set ture if we need to display error if we find any issue while converting scss file to css
+    outputStyle:'extended',
+    prefix:'/css' // this for node server to find scss file i.e for layoyt 
+}))
 
 const cookieParser = require('cookie-parser'); // cookie parser
 app.use(express.urlencoded());
