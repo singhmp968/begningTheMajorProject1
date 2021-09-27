@@ -1,5 +1,7 @@
 const User = require('../models/user')
 
+// calling post
+//const Post = require('../models/post')
 module.exports.profile = function(req,res){
    // return res.end('<h1>@ profile page</h1>')
     return res.render('userhome',{
@@ -64,3 +66,15 @@ module.exports.destroySession = function(req,res){
     
     return res.redirect('/')
 }
+
+// creating makePost by me
+// module.exports.makePost  = function(req,res){
+//     console.log(req.body)
+//     Post.create(req.body,function(err,user){
+//         if(err){
+//             console.log('hey it an error')
+//             return;
+//         }
+//         return res.redirect('/')
+//     })
+// }

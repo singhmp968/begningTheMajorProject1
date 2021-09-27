@@ -12,7 +12,8 @@ router.get('/aboutUs',aboutUscontroller.aboutUs)
 /*******Important here we are passing any /user req i.e get,post,put anything using ruter ******** */
 
 router.use('/user',require('./user')) // pleas check index.js i.e the main index.js file app.use('/',require('./routes')) we are tying to makeand passing as ./user
-
+// for calling from post.js
+router.use('/posts',require('./post'))
 
 //for any further routes,access from here
 // router.use('/routerName',require(./routerFileName))

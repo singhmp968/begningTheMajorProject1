@@ -15,3 +15,36 @@
 </html> -->
 
 <h1>Codeial / <%= title %></h1>
+<section id="feed-posts">
+    <h4>Posts</h4>
+    <% if(locals.user ){ %>  <!--need more clearity on locals varilable-->
+    <form action="posts/create" method="POST" id = "new-post-form">
+        <textarea name="content" id="" cols="30" rows="3" placeholder="typehere ..."></textarea>
+        <input type="submit" value="post">
+    </form>
+    <% } %>
+</section>
+
+<div id = "posts-list-container">
+    <ul>
+        <% for(post of posts) { %>
+           <li> 
+               <p>
+                   <%= post.content %> 
+                   <br>
+                   <small>
+                       <%= post.user.name%>  <!-- here we are reciving user data from home controller by populating  it -->
+                   </small>
+                </p>
+            </li> 
+        <% } %>
+    </ul>
+</div>
+
+<!-- <section id='all posts'>
+    <% for(let i of posts) {%>
+        <textarea name="contents" id="" cols="30" rows="3" >   <%= i.content %> </textarea> <br ><br > 
+        
+    <% } %>
+    
+</section> -->
