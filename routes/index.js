@@ -15,6 +15,10 @@ router.use('/user',require('./user')) // pleas check index.js i.e the main index
 // for calling from post.js
 router.use('/posts',require('./post'))
 
+// router for comment controller
+//router.use('/comments',require('./comments'))
+router.use('/comment',require('./comments'))
+
 //for any further routes,access from here
 // router.use('/routerName',require(./routerFileName))
 router.use('/game',require('./games'))
