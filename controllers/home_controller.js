@@ -28,7 +28,7 @@ Post.find({})
            if(err){console.log('err'); return}
             //console.log('postss->',post)
             return res.render('home',{
-            title:"odeial | Home",
+            title:"Codeial | Home",
             posts:posts
             //users:users
             })
