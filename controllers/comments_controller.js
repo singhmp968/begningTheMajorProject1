@@ -8,7 +8,7 @@ module.exports.create = function(req,res){
             Comment.create({
                 content: req.body.content,
                 post: req.body.post,
-                user:req.user_id
+                user:req.user._id
                 
             },function(err,comment){
                     // handle error

@@ -16,7 +16,15 @@ module.exports.home = function(req, res){
 //     })
 
 // here in the below function we are populating the user from User DB by using populate there is some slight change in the function writing i.e populate('user').exec() 
-Post.find({}).populate('user').exec(function(err,posts){ // {} this will return all the post
+Post.find({})
+.populate('user')
+.populate({
+    path:'comments',
+    populate: {
+        path : 'user'
+}
+})
+.exec(function(err,posts){ // {} this will return all the post
            if(err){console.log('err'); return}
             //console.log('postss->',post)
             return res.render('home',{
