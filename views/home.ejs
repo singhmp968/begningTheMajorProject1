@@ -42,6 +42,7 @@
                        <%= post.user.name %>  <!-- here we are reciving user data from home controller by populating  it -->
                    </small>
                 </p>
+
                 
                 <div class="post-comments">
                     <% if(locals.user) { %>
@@ -58,6 +59,12 @@
                         <% for(comment of post.comments) {%>
                             
                             <p>
+                                <% if (locals.user && locals.user.id == comment.user.id){ %>
+                                    <small>
+                                        <a href="/comment/destroy/<%=comment.id %>">X</a>
+                                    </small>
+                                <%}%>
+                
                                 <%= comment.content %>
                                 <br>
                             <small>
