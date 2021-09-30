@@ -30,6 +30,12 @@
         <% for(post of posts) { %>
            <li> 
                <p>
+                   <!-- making check for checking if the user is sign in and the user who created that post -->
+                   <% if (locals.user && locals.user.id == post.user.id){ %>
+                    <small>
+                        <a href="/posts/destroy/<%= post.id %>">X</a>
+                    </small>
+                    <%}%>
                    <%= post.content %> 
                    <br>
                    <small>
