@@ -27,12 +27,16 @@ Post.find({})
 .exec(function(err,posts){ // {} this will return all the post
            if(err){console.log('err'); return}
             //console.log('postss->',post)
-            return res.render('home',{
-            title:"Codeial | Home",
-            posts:posts
-            //users:users
-            })
+            User.find({},function(err,users){ // getting ths list of user to display in Ui
+                return res.render('home',{
+                    title:"Codeial | Home",
+                    posts:posts,
+                    all_users:users
+                    })
+        
+            });
 
+          
 
         })
     }

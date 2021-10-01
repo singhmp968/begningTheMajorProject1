@@ -4,10 +4,14 @@ const User = require('../models/user')
 //const Post = require('../models/post')
 module.exports.profile = function(req,res){
    // return res.end('<h1>@ profile page</h1>')
-    return res.render('userhome',{
-        title:'user profile'
-    })
+   User.findById(req.params.id,function(err,user){
 
+    return res.render('userhome',{
+        title:'user profile',
+        profile_user:user
+       })
+   });
+    
 }
 
 module.exports.userPost = function(req,res){
@@ -23,6 +27,17 @@ module.exports.signUp = function(req,res){
     })
     
 }
+
+module.exports.update = function(req,res){
+    if(req.user.id == req.params.id){
+        User.findByIdAndUpdate(req.params.id,req.body,function(err,user){ // {we can also replace req.body with "{name:req.body.name,email:req.body.email}"}
+            return res.redirect('back')
+        });
+    }else{
+        return res.status(401).send('unauthorized');
+    }
+    }
+
 
 //creating sign in
 module.exports.signin = function(req,res){
