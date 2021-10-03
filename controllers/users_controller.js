@@ -73,13 +73,16 @@ module.exports.create = function(req,res){
 }
 // here we are creating session i.e handling signin page for the user
 module.exports.createSession = function(req,res){
+    req.flash('success','Logged in successfully'); // for passing this to the html or ejs we need to create a middle-ware that fetch every thing from req.flash
     return res.redirect('/')
 }
 
 module.exports.destroySession = function(req,res){
     req.logout() // logout is given to req by passport.js
+    req.flash('success','logged out'); // for passing this to the html or ejs we need to create a middle-ware that fetch every thing from req.flash
     
-    return res.redirect('/')
+   // return res.redirect('/',{flash:{success:'logged'}}) we are not using it beacause every time we have to create a seperate cntext to send the message
+   return res.redirect('/')
 }
 
 // creating makePost by me

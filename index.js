@@ -12,7 +12,10 @@ const MongoStore = require('connect-mongo')(session); // here  connect mongo reu
 
 //const { use } = require('./routes');
 
-const sassmiddleWare = require('node-sass-middleware');
+const sassmiddleWare = require('node-sass-middleware'); // css design middle ware
+const flash = require('connect-flash') // for showing flash message
+const customMware = require('./config/middleware') //  getting middle ware
+
 app.use(sassmiddleWare({
     src:'./assets/scss',
     dest:'./assets/css',
@@ -79,7 +82,8 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session()); 
 app.use(passport.setAuthenticatedUser)
-
+app.use(flash()); // using flase after session is being used
+app.use(customMware.setFlash) // using custom middle ware 
 app.use('/',require('./routes')) // any request is comming required the index of route
 
 app.listen(port,function(err){
