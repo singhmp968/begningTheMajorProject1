@@ -21,7 +21,7 @@
 <section id="feed-posts">
     <h4>Posts</h4>
     <% if(locals.user ){ %>  <!--need more clearity on locals varilable-->
-    <form action="posts/create" method="POST" id = "new-post-form">
+    <form action="posts/create" method="POST" id="new-post-form">
         <textarea name="content" id="" cols="30" rows="3" placeholder="typehere ..." required></textarea>
         <input type="submit" value="post">
     </form>
@@ -48,6 +48,9 @@
     <% } %>
 </section>
 </div>
+
+<!-- including ejs file -->
+<script src="js/home_post.js"></script>
 <!-- <section id='all posts'>
     <% for(let i of posts) {%>
         <textarea name="contents" id="" cols="30" rows="3" >   <%= i.content %> </textarea> <br ><br > 

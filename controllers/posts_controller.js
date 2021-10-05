@@ -3,15 +3,28 @@ const Comment = require('../models/comment');
 module.exports.create =async function(req,res){
    // console.log(req.user); // need to understand properly
    try {
-    await  Post.create({
+    let post = await  Post.create({
         content:req.body.content,
         user:req.user._id // this user is omming from app.use(passport.setAuthenticatedUser)
-    })
+    });
+
+    if(req.xhr){ // checking if the request is AJAx request
+        return res.status(200).json({  // retutning status ->200 to res
+            data : {
+                post:post  // this post is from   let post = await  Post.create({
+  
+            },
+            message : 'post created' // this is ageneral method to send JSOn Data by sending a message
+        }
+        ) 
+    }
+    req.flash('success','Post Published!');
     return res.redirect('back')
        
    } catch (error) {
-    console.log('Error',err) ;
-    return;
+    req.flash('error',error);
+    console.log('Error',error) ;
+    return res.redirect('back');
    }
     
 }
@@ -25,14 +38,18 @@ module.exports.destroy =async function(req,res){
             post.remove(); // removing the post
            await Comment.deleteMany({post: req.params.id}) // deleting all the comments by  id) 
             
+           req.flash('success','Post and associated deleted');
            return res.redirect('back')
 
         
         }else { // if post and id donot match
+            req.flash('success','error you cannot delete this post');
             return res.redirect('back')
         }    
     } catch (error) {
+        req.flash('error',error);
         console.log('Error',error)
+        return res.redirect('back')
     }
 
     

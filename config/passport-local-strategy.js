@@ -6,19 +6,22 @@ const LocalStrategy = require('passport-local').Strategy;
 // whenever local stratege is called the email and function is being called
 // auth using passport
 passport.use(new LocalStrategy({
-    usernameField:'email' // email is comming from usse schema to identify the email
+    usernameField:'email', // email is comming from usse schema to identify the email
+    passReqToCallback:true // thsi acctuall allow us to set first argument to true, function(req,email,password,done){ req here
 },
-    function(email,password,done){ // doen is a callback function whic is calling back to passport functin 
+    function(req,email,password,done){ // doen is a callback function whic is calling back to passport functin 
         // find the user and estiblished identity
         // here in findOn 1st email is the property thst we are looking in the User and 2nd onr is conninf from funtion
         User.findOne({email:email},function(err,user){
             if(err){
                 console.log('error in finding the user usinf --->passport.js');
+                req.flash('error',err)
                 return done(err); // done takes two argument first one is error and second in wheather authentication is done or not i.e boolean
             }
             // here user.password is from user from user and password is from function
             if(!user || user.password != password){
                 console.log('invalid user name and password')
+                req.flash('error','invalid user name and password');
                 return done(null,false); // this mean there is no error but the usr is not found basicall auth is not complete 1one null as there is no errroe and 2nd one is false as authentication is not being dome
             }
             return done(null,user); // finally when the user is find return null i.e no error and 2nd one is user 
