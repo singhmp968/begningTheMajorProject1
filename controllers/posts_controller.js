@@ -15,8 +15,7 @@ module.exports.create =async function(req,res){
   
             },
             message : 'post created' // this is ageneral method to send JSOn Data by sending a message
-        }
-        ) 
+        }) 
     }
     req.flash('success','Post Published!');
     return res.redirect('back')
@@ -37,7 +36,15 @@ module.exports.destroy =async function(req,res){
         if(post.user == req.user.id){ //we are getting user id from post schema kindly check 2.we re not using this req.user._id bacause it is not in string thereofore we hava to use req.user.id
             post.remove(); // removing the post
            await Comment.deleteMany({post: req.params.id}) // deleting all the comments by  id) 
-            
+
+            if(req.xhr){
+                return res.status(200).json({
+                    data: {
+                        post_id : req.params.id
+                    },
+                    message : 'post deleted successfully'
+                })
+            }
            req.flash('success','Post and associated deleted');
            return res.redirect('back')
 

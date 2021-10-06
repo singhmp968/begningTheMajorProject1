@@ -19,6 +19,7 @@ module.exports.home =async function(req, res){ // making the function async i.e 
 try{
     let posts =await Post.find({}) // awaited to this post to b completed
         .populate('user')
+        .sort('-createdAt') // sorting ny using createdAt method in MongooseDb i.e nearest
         .populate({
             path:'comments',
             populate: {
