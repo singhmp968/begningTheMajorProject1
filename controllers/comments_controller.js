@@ -13,7 +13,10 @@ module.exports.create =async function(req,res){
             // now here we are updatin 'post' i.e addind data to %%post%%
             post.comments.push(comment) // pushing comment into comments into the &&same post&& 
             post.save(); // after every update it will going to save the data in DB
-            res.redirect('/')
+            // TODO : TA Help reuired 
+            req.flash('success','comment added success fully');
+            res.redirect('/');
+           
         }     
     } catch (error) {
         console.log('Error', error);
@@ -30,6 +33,8 @@ try {
     let postId = comment.post; // storing comment id of comment.post before deleting andwe are going to use this into deleting the comment id @ postSchema
     comment.remove();
     Post.findByIdAndUpdate(postId,{ $pull: { comments: req.params.id }},function(err,post){ // here { $pull: { comments: req.params.id } is used to pull the comments from DB
+        // TODO: req.flash
+          req.flash('success','comment destroy success fully');
         return res.redirect('back');
     }); 
     }else{

@@ -7,12 +7,15 @@ module.exports.create =async function(req,res){
         content:req.body.content,
         user:req.user._id // this user is omming from app.use(passport.setAuthenticatedUser)
     });
-
+    let userDet =await Post.findOne({user:req.user._id}).populate('user').exec(); // populating username from post
+    //post = await Post.populate('user', 'name').execPopulate(); // sending a new way IMP!!!!!
+    
+   console.log('--->',userDet.user.name);
     if(req.xhr){ // checking if the request is AJAx request
         return res.status(200).json({  // retutning status ->200 to res
             data : {
-                post:post  // this post is from   let post = await  Post.create({
-  
+                post:post,  // this post is from   let post = await  Post.create({
+                userName : userDet.user.name
             },
             message : 'post created' // this is ageneral method to send JSOn Data by sending a message
         }) 
@@ -46,6 +49,7 @@ module.exports.destroy =async function(req,res){
                 })
             }
            req.flash('success','Post and associated deleted');
+          
            return res.redirect('back')
 
         

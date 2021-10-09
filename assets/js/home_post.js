@@ -12,10 +12,23 @@
                 data : newPostForm.serialize(), // this will convert data comming from form to JSON Format i.e content : 'valeu of the post content';
                 success : function(data){
                     console.log(data)
-                    let newpost = newPostDom(data.data.post);
+                    //let newpost = newPostDom(data.data.post); old method
+                    let newpost = newPostDom(data.data.post,data.data); // added value
+                    
                     $('#posts-list-container>ul').prepend(newpost); // here using prepend we are addint at the top not at the bottom i.e wevery ne comment will be added at the top
-                  //  deletePost($(' .delete-post-button', newpost)); // please Revis delete post againg
-                  deletePost($(' .delete-post-button', newpost))
+                    deletePost($(' .delete-post-button', newpost));  // please Revis delete post againg
+
+                    // displaying Notification for post creation
+                    new Noty({
+                        theme:'relax',
+                        text: 'Post Published',
+                        type:'success',
+                        layout:'topRight',
+                        timeout:1500
+                        
+                    }).show();
+    
+
                 }, error: function(error){
                     console.log(error.responseText);
                 }
@@ -26,7 +39,7 @@
   
 
     // method to create a post in Dom
-    let newPostDom = function(post){
+    let newPostDom = function(post,datas){
         return $(`<li id="post-${post._id}"> 
         <p>
             <!-- making check for checking if the user is sign in and the user who created that post -->
@@ -36,9 +49,9 @@
             
              ${post.content} 
             <br>
-            <small>
-            ${post.user.name} 
-            </small>
+            <small> 
+            ${datas.userName}
+           </small>
          </p>
          <div class="post-comments">
                  <form action="/comment/create" method="POST">
@@ -64,12 +77,23 @@
     let deletePost = function(deleteLink){
         $(deleteLink).click(function(e){
             e.preventDefault();
-
             $.ajax({
                 type: 'get',
                 url: $(deleteLink).prop('href'),
                 success: function(data){
                     $(`#post-${data.data.post_id}`).remove();
+
+                    // displaying Notification for post creation
+                    new Noty({
+                        theme:'relax',
+                        text: 'Post Deleted',
+                        type:'success',
+                        layout:'topRight',
+                        timeout:1500
+                        
+                    }).show();
+    
+                    
                 },error: function(error){
                     console.log(error.responseText);
                 }
@@ -78,7 +102,16 @@
         });
     }
 
+    // CONVERTING ALL THE POST INTO AJAX
+    let convertAlPostInToAjax = function() {
+        $('#posts-list-container>ul>li').each(function() {
+            let self = $(this) // hete each list
+            let deleteButton = $(' .delete-post-button',this);
+            deletePost(deleteButton);
+        })
+    }
+
 
 createPost();
-
+convertAlPostInToAjax();
 }
