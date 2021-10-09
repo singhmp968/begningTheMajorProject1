@@ -17,7 +17,7 @@
                     
                     $('#posts-list-container>ul').prepend(newpost); // here using prepend we are addint at the top not at the bottom i.e wevery ne comment will be added at the top
                     deletePost($(' .delete-post-button', newpost));  // please Revis delete post againg
-
+                    //new PostComment(data.data.post)
                     // displaying Notification for post creation
                     new Noty({
                         theme:'relax',

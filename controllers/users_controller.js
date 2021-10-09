@@ -1,3 +1,4 @@
+const { use } = require('passport');
 const User = require('../models/user')
 
 // calling post
@@ -28,15 +29,42 @@ module.exports.signUp = function(req,res){
     
 }
 
-module.exports.update = function(req,res){
-    if(req.user.id == req.params.id){
+module.exports.update =async function(req,res){
+    /*if(req.user.id == req.params.id){
         User.findByIdAndUpdate(req.params.id,req.body,function(err,user){ // {we can also replace req.body with "{name:req.body.name,email:req.body.email}"}
             return res.redirect('back')
         });
     }else{
         return res.status(401).send('unauthorized');
+    }*/
+    // converting to async and await
+    if(req.user.id == req.params.id){
+        try {
+            // when we are trying to access the body param i.e values omming from the there due to 'multipart/form-data ' and we wont be able to access directly from req.params due to multipart form and there for this we hava multer 1.userSchema.statics.uploadedAvatar = multer({storage:storage}).single('avatar') and 2.userSchema.statics.avatarPath = AVATAR_PATH we are going to take help
+            let user = await User.findById(req.params.id);
+            User.uploadedAvatar(req,res,function(err){
+                if(err){console.log('Multer error',err); return;}
+                //console.log(req.file); // req contain the files
+                user.name = req.body.name;
+                user.email = req.body.email;
+                if(req.file){
+                    // this is just saving the path only of the uploaded file intothe avatar fields in the user
+                    user.avatar = User.avatarPath +'/'+ req.file.filename //taking from userSchema.statics.avatarPath = AVATAR_PATH
+                }
+                user.save();
+                return res.redirect('back');
+            })
+        } catch (error) {
+            req.flash('error',error);
+            console.log('Error',error) ;
+            return res.redirect('back');
+        }
+
+    }else{
+        //TODO flash message for unauthorized
+        return res.status(401).send('unauthorized');
     }
-    }
+}
 
 
 //creating sign in

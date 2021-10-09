@@ -23,6 +23,8 @@ app.use(sassmiddleWare({
     outputStyle:'extended',
     prefix:'/css' // this for node server to find scss file i.e for layoyt 
 }))
+// make the uploads avaliable to the browsers
+app.use('/uploads',express.static(__dirname + '/uploads')); // for using in image displaying in profile
 
 const cookieParser = require('cookie-parser'); // cookie parser
 app.use(express.urlencoded());
