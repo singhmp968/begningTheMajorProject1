@@ -7,6 +7,8 @@ const db = require('./config/mongoose');
 const session = require('express-session'); // this library is responsible for encrypting and storing user-id into session cookie
 const passport= require('passport');
 const passportLocal = require('./config/passport-local-strategy');
+// importing passport jwt- strategey
+const passportJWT = require('./config/passport-jwt-stragegy'); // importing JWT file form the given locatn
 const MongoStore = require('connect-mongo')(session); // here  connect mongo reuired and aurgument 'session'
 //const MongoStore = require('connect-mongo').default
 

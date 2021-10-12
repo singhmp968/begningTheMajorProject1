@@ -11,13 +11,13 @@
                 url: '/posts/create',
                 data : newPostForm.serialize(), // this will convert data comming from form to JSON Format i.e content : 'valeu of the post content';
                 success : function(data){
-                    console.log(data)
+                   // console.log(data)
                     //let newpost = newPostDom(data.data.post); old method
                     let newpost = newPostDom(data.data.post,data.data); // added value
                     
                     $('#posts-list-container>ul').prepend(newpost); // here using prepend we are addint at the top not at the bottom i.e wevery ne comment will be added at the top
                     deletePost($(' .delete-post-button', newpost));  // please Revis delete post againg
-                    //new PostComment(data.data.post)
+                    new PostComment(data.data.post._id);
                     // displaying Notification for post creation
                     new Noty({
                         theme:'relax',
@@ -54,7 +54,7 @@
            </small>
          </p>
          <div class="post-comments">
-                 <form action="/comment/create" method="POST">
+                 <form id="post-${ post._id }-comments-form" action="/comment/create" method="POST">
                      <input type="text" name="content" placeholder="add comments..." required>
                      <!-- sending the id of the post by hiding from the usrs-->
                      <input type="hidden" name="post" value="${post._id}">
@@ -103,15 +103,34 @@
     }
 
     // CONVERTING ALL THE POST INTO AJAX
-    let convertAlPostInToAjax = function() {
+ let convertAlPostInToAjax = function() {
         $('#posts-list-container>ul>li').each(function() {
             let self = $(this) // hete each list
             let deleteButton = $(' .delete-post-button',this);
             deletePost(deleteButton);
-        })
+            // get the post's id by splitting the id attribute
+            let postId = self.prop('id').split("-")[1];
+            //console.log(postId);
+            new PostComment(postId);
+            
+        });
     }
 
 
+// let convertPostsToAjax = function(){
+//     $('#posts-list-container>ul>li').each(function(){
+//         let self = $(this);
+//         let deleteButton = $(' .delete-post-button', self);
+//         deletePost(deleteButton);
+
+//         // get the post's id by splitting the id attribute
+//         let postId = self.prop('id').split("-")[1]
+//         //new PostComment(postId);
+//     });
+//}
+
 createPost();
 convertAlPostInToAjax();
+//convertPostsToAjax();
+
 }

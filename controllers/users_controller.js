@@ -1,6 +1,7 @@
 const { use } = require('passport');
 const User = require('../models/user')
-
+const fs = require('fs');
+const path = require('path');
 // calling post
 //const Post = require('../models/post')
 module.exports.profile = function(req,res){
@@ -48,6 +49,9 @@ module.exports.update =async function(req,res){
                 user.name = req.body.name;
                 user.email = req.body.email;
                 if(req.file){
+                    if(user.avatar){ // deleting or replacing a user image
+                    fs.unlinkSync(path.join(__dirname,'..',user.avatar)); // userSchema.statics.avatarPath = AVATAR_PATH go to user file in model
+                    }
                     // this is just saving the path only of the uploaded file intothe avatar fields in the user
                     user.avatar = User.avatarPath +'/'+ req.file.filename //taking from userSchema.statics.avatarPath = AVATAR_PATH
                 }

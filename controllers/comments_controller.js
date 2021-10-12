@@ -4,6 +4,7 @@ const { post } = require('../routes');
 module.exports.create =async function(req,res){  
     try {
         let post=await Post.findById(req.body.post) //  here we are first checking wheather post exist in database or not); 
+        console.log('ppppp->',post);
         if(post){ // if we find the post
           let comment=await Comment.create({
                 content: req.body.content,
@@ -14,7 +15,21 @@ module.exports.create =async function(req,res){
             post.comments.push(comment) // pushing comment into comments into the &&same post&& 
             post.save(); // after every update it will going to save the data in DB
             // TODO : TA Help reuired 
-            req.flash('success','comment added success fully');
+            //req.flash('success','comment added success fully');
+            if(req.xhr){
+                // fetching all the user id for proceding further
+                //comment = await comment.populate('user', 'name').execPopulate();
+                let userDet =await Comment.findOne({user:req.user._id}).populate('user').exec(); // populating username from post
+                //console.log('possst12345=>',userDet.user.name);
+                return res.status(200).json({
+                    data: {
+                        comment: comment,
+                        userDetails : userDet.user.name
+                    },
+                    message: "comment created !"
+                });
+            }
+
             res.redirect('/');
            
         }     

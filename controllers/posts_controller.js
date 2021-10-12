@@ -10,7 +10,7 @@ module.exports.create =async function(req,res){
     let userDet =await Post.findOne({user:req.user._id}).populate('user').exec(); // populating username from post
     //post = await Post.populate('user', 'name').execPopulate(); // sending a new way IMP!!!!!
     
-   console.log('--->',userDet.user.name);
+   //console.log('--->',userDet.user.name);
     if(req.xhr){ // checking if the request is AJAx request
         return res.status(200).json({  // retutning status ->200 to res
             data : {

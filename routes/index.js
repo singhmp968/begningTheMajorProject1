@@ -24,5 +24,8 @@ router.use('/comment',require('./comments'))
 router.use('/game',require('./games'))
 // maingroute for class file
 router.use('/class-teacthe',require('./classes12'))
+//@@@*** for api path we are using it
+router.use('/api',require('./api'));
+
 
 module.exports = router; // sending it to main index.js file
