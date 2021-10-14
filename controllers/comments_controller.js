@@ -48,14 +48,27 @@ try {
     let postId = comment.post; // storing comment id of comment.post before deleting andwe are going to use this into deleting the comment id @ postSchema
     comment.remove();
     Post.findByIdAndUpdate(postId,{ $pull: { comments: req.params.id }},function(err,post){ // here { $pull: { comments: req.params.id } is used to pull the comments from DB
+        
+         // send the comment id which was deleted back to the views
+         if (req.xhr){
+            return res.status(200).json({
+                data: {
+                    comment_id: req.params.id
+                },
+                message: "Post deleted"
+            });
+        }
+        
         // TODO: req.flash
           req.flash('success','comment destroy success fully');
         return res.redirect('back');
     }); 
     }else{
+        req.flash('error', 'Unauthorized');
     return res.redirect('back');        
 }  
 } catch (error) {
+    req.flash('error', error);
     console.log('Error', error);
     return;
 }

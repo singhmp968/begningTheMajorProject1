@@ -33,7 +33,7 @@ class PostComment {
                     console.log('dddaattaa=>',data) 
                         let newComment = pSelf.newCommentDom(data.data.comment,data.data.userDetails);
                         $(`#post-comments-${postId}`).prepend(newComment);
-                        //pSelf.deleteComment($(' .delete-comment-button', newComment));
+                        pSelf.deleteComment($(' .delete-comment-button', newComment));
 
                 }, error : function(error) {
                     console.log('error',error.responseText);
@@ -49,7 +49,7 @@ class PostComment {
         return $(`<li id="comment-${comment._id}">
         <p>
                 <small>
-                    <a class="delete-comment-button" href="/comment/destroy/${comment.id}">X</a>
+                    <a class="delete-comment-button" href="/comment/destroy/${comment._id}">X</a>
                 </small>
             
     
@@ -62,6 +62,22 @@ class PostComment {
         </p>    
     
     </li>`)
+    }
+    deleteComment(deleteLink){
+        console.log($(deleteLink).prop('href'));
+        $(deleteLink).click(function(e){
+            e.preventDefault();
+            $.ajax({
+                type:'get',
+                url:$(deleteLink).prop('href'),
+                success: function(data){ // got comment Id for deleting 
+                    console.log(data);
+                    $(`#comment-${data.data.comment_id}`).remove();
+                }, error: function(err){
+                    console.log('error',err.responseText);
+                }
+            })
+        })
     }
 
 }

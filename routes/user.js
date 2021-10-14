@@ -19,5 +19,11 @@ module.exports = router; // sending it to main index.js file
 
 router.get('/sign-out',userController.destroySession)
 
+// router for google authentication
+router.get('/auth/google',passport.authenticate('google',{scope:['profile','email']}));  //('google',{scope} for google strategy scope i.e scope:['profile','email'] is part of information whic is provided
+// similar to line 14 to 17 check
+router.get('/auth/google/callback',passport.authenticate('google',{failureRedirect:'/user/sign-in'}),userController.createSession) // similar to passport .authenciate local
+
+
 // creting user-post by my own need to dele
 //router.post('/make-post',passport.checkAuthentication,userController.makePost)
