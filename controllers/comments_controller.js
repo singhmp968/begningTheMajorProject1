@@ -1,6 +1,8 @@
 const Comment = require('../models/comment');
 const Post = require('../models/post');
 const { post } = require('../routes');
+const commentMailer = require('../mailers/comments_mailer');
+
 module.exports.create =async function(req,res){  
     try {
         let post=await Post.findById(req.body.post) //  here we are first checking wheather post exist in database or not); 
@@ -16,10 +18,14 @@ module.exports.create =async function(req,res){
             post.save(); // after every update it will going to save the data in DB
             // TODO : TA Help reuired 
             //req.flash('success','comment added success fully');
-            if(req.xhr){
-                // fetching all the user id for proceding further
+            
+             // fetching all the user id for proceding further
                 //comment = await comment.populate('user', 'name').execPopulate();
                 let userDet =await Comment.findOne({user:req.user._id}).populate('user').exec(); // populating username from post
+               // need to add comment
+               commentMailer.newComment(userDet,comment);
+
+            if(req.xhr){
                 //console.log('possst12345=>',userDet.user.name);
                 return res.status(200).json({
                     data: {
