@@ -2,6 +2,10 @@ const Comment = require('../models/comment');
 const Post = require('../models/post');
 const { post } = require('../routes');
 const commentMailer = require('../mailers/comments_mailer');
+const commentEmailWorker = require('../workers/comment_email_worker');
+const queue = require('../config/kue');
+const { query } = require('express');
+
 
 module.exports.create =async function(req,res){  
     try {
@@ -20,10 +24,24 @@ module.exports.create =async function(req,res){
             //req.flash('success','comment added success fully');
             
              // fetching all the user id for proceding further
-                //comment = await comment.populate('user', 'name').execPopulate();
+                //comment123 = await comment.populate('user', 'name').execPopulate();
                 let userDet =await Comment.findOne({user:req.user._id}).populate('user').exec(); // populating username from post
                // need to add comment
-               commentMailer.newComment(userDet,comment);
+              // commentMailer.newComment(userDet,comment);
+            //   let job=  queue.create('emails',comment).save(function(err){
+               
+            // this is being don by me t to merge userset and comment and send to job 
+            let newCommNadUserDetails = {
+                comment:comment,
+                userDet: userDet 
+            }
+            //let job= queue.create('emails',userDet).save(function(err){
+                let job= queue.create('emails',userDet).save(function(err){
+
+                  if(err){console.log('error isn sending queue',err);return;};
+                    console.log('job enqueued',job.id);
+              })
+
 
             if(req.xhr){
                 //console.log('possst12345=>',userDet.user.name);
