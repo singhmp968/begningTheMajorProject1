@@ -83,6 +83,16 @@ module.exports.signin = function(req,res){
     if(req.isAuthenticated()){
        return res.redirect('/user/profile')
     }
+
+    if(req.xhr){ // checking if the request is AJAx request
+        return res.status(200).json({  // retutning status ->200 to res
+            data : {
+                data1:'welciom'
+            },
+            message : 'welcome to sign-in page' // this is ageneral method to send JSOn Data by sending a message
+        });
+    }
+
     return res.render('user_signin',{
         title:'codeial | signin'
     })
