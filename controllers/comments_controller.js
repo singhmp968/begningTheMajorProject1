@@ -36,7 +36,7 @@ module.exports.create =async function(req,res){
                 userDet: userDet 
             }
             //let job= queue.create('emails',userDet).save(function(err){
-                let job= queue.create('emails',userDet).save(function(err){
+                let job= queue.create('emails',newCommNadUserDetails).save(function(err){
 
                   if(err){console.log('error isn sending queue',err);return;};
                     console.log('job enqueued',job.id);

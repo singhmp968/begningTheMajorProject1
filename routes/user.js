@@ -24,6 +24,12 @@ router.get('/auth/google',passport.authenticate('google',{scope:['profile','emai
 // similar to line 14 to 17 check
 router.get('/auth/google/callback',passport.authenticate('google',{failureRedirect:'/user/sign-in'}),userController.createSession) // similar to passport .authenciate local
 
+// section for implementing forgot password logic
+router.post('/forget_passwordEmailSec',userController.forget_passwordEmailSec)
+router.get('/forgetPassword',userController.forgetPassword)
+
+router.get('/reset_password/',userController.reset_password)
+router.post('/forget_updata_password/',userController.forget_updata_password);
 
 // creting user-post by my own need to dele
 //router.post('/make-post',passport.checkAuthentication,userController.makePost)

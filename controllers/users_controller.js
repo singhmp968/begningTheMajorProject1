@@ -2,6 +2,10 @@ const { use } = require('passport');
 const User = require('../models/user')
 const fs = require('fs');
 const path = require('path');
+const crypto  = require('crypto');
+const ResetPassword = require('../models/reset_passwordToken');
+const forgotMailer = require('../mailers/forgotPasswordMailer');
+
 // calling post
 //const Post = require('../models/post')
 module.exports.profile = function(req,res){
@@ -114,8 +118,134 @@ module.exports.destroySession = function(req,res){
     req.flash('success','logged out'); // for passing this to the html or ejs we need to create a middle-ware that fetch every thing from req.flash
     
    // return res.redirect('/',{flash:{success:'logged'}}) we are not using it beacause every time we have to create a seperate cntext to send the message
-   return res.redirect('/')
+   return res.redirect('/');
 }
+
+
+module.exports.forget_passwordEmailSec =async function(req,res){
+
+        //console.log('@ forgot password section')
+  //let accesstoken = crypto.randomBytes(20).toString('hex');
+  //console.log('accessToken=>',accesstoken);
+    //res.redirect('/');
+    try {
+        //console.log(req.body);
+        let user = await User.findOne({email:req.body.email});
+        console.log('users=>',user)
+        if(user!=null){
+            // checking wether access token exist or not
+            let findUser = await ResetPassword.findOne({user: user._id})
+            console.log('finduser==>',findUser);
+            if(findUser){
+                let check= await ResetPassword.findOneAndUpdate({user: user._id},{isValid:true},{
+                    new: true
+                })
+                console.log('ckecking logic',check)
+                // sending mail
+                forgotMailer.frogotpasswordLink(check,user.email);
+                
+            }else {
+
+                let accesstoken = crypto.randomBytes(20).toString('hex');
+                
+                let restepassobj = await ResetPassword.create({
+                    user:user._id,
+                    accessToken : accesstoken,
+                    isValid: true
+    
+                    });
+                    forgotMailer.frogotpasswordLink(restepassobj,user.email);
+                
+                    console.log('restll=>',restepassobj)
+                }
+           
+        }else{
+            console.log('user not found');
+            return res.redirect('/user/forgetPassword');
+        }
+        
+    } catch (error) {
+            console.log('cannot find user',error)
+    }
+
+    
+    return res.redirect('/');
+
+}
+
+// this is for forgot password logic
+module.exports.forgetPassword = function(req,res){
+    //console.log('@ forgot password section')
+    // let accesstoken = crypto.randomBytes(20).toString('hex');
+    // console.log('accessToken=>',accesstoken);
+    
+    return res.render('forgotPasswordEmailPage',{
+        title:'codeial | forgot'
+        //accesstoken: accesstoken
+    });
+
+}
+
+// reset password link
+module.exports.reset_password =async function(req,res){
+
+//    console.log(req.query.access_token);
+   let resrtaccfind = await ResetPassword.findOne({accessToken:req.query.access_token})
+    if(resrtaccfind){
+        
+        console.log(resrtaccfind);
+        // checking if the toke is valid
+
+        if(resrtaccfind.isValid){
+            res.locals.isValid = true ;    
+         let userDet =await ResetPassword.findOne({user:resrtaccfind.user}).populate('user').exec(); // populating username from post
+            
+            console.log('it is valid and user det',resrtaccfind.isValid,userDet);
+            res.locals.userDetaislpass = userDet
+        }else{
+            console.log('it isNot  valid',resrtaccfind.isValid);
+
+        }
+
+    }else{
+        console.log('invalid user id')
+    }
+    return res.render('forget_pass',{
+        title:'codeial | forgot password page'
+        
+    })
+
+}
+
+
+module.exports.forget_updata_password =async function(req,res){
+    console.log('post section',req.query.reset_email);
+    console.log('passwords',req.body.password,req.body.cnfpassword);
+
+    if(req.body.password == req.body.cnfpassword){
+        console.log('password match')
+        let userdet = await User.findOneAndUpdate({email:req.query.reset_email},{password:req.body.password},{
+            new: true
+        });
+        console.log('changepsot=>',userdet); 
+
+        if(userdet){
+           let uss= await ResetPassword.findOneAndUpdate({user:userdet._id},{isValid:false},{
+               new:true
+           })
+            console.log('isis=>',uss);
+        }
+       
+    }else{
+        console.log('password does not match');
+        return res.redirect('back');
+    }
+    return res.redirect('/user/sign-in');
+}
+
+
+
+
 
 // creating makePost by me
 // module.exports.makePost  = function(req,res){

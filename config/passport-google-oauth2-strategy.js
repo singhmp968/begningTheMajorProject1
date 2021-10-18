@@ -30,7 +30,7 @@ passport.use(new googleStrategy({  // telling passport to user object of google 
                 User.create({
                     name : profile.displayName,
                     email : profile.emails[0].value,
-                    password : crypto.randomBytes(20).toString('hex')
+                    password : crypto.randomBytes(20).toString('hex') // this is for generating random string
                 }, function(err,user){
                     if(err) {console.log('eorror in creating user using google strategy passport', err); return;}
                     return done(null,user);

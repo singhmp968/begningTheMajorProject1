@@ -1,4 +1,6 @@
 const mongoos = require('mongoose')
+
+
 const postSchema = new mongoos.Schema({
     content:{
         type:String,
@@ -14,6 +16,13 @@ const postSchema = new mongoos.Schema({
         {
             type : mongoos.Schema.Types.ObjectId , // here we are refering to object id
             ref : 'Comment' 
+        }
+    ],
+    // making a array tomake query fase
+    likes : [
+        {
+            type : mongoos.Schema.Types.ObjectId , // here we are refering to object id
+            ref : 'Like'
         }
     ]
 },{
