@@ -5,6 +5,9 @@ const path = require('path');
 const crypto  = require('crypto');
 const ResetPassword = require('../models/reset_passwordToken');
 const forgotMailer = require('../mailers/forgotPasswordMailer');
+const forgotpasswordWorker = require('../workers/forgotemail_worher');
+
+const queue = require('../config/kue');
 
 // calling post
 //const Post = require('../models/post')
@@ -142,8 +145,18 @@ module.exports.forget_passwordEmailSec =async function(req,res){
                 })
                 console.log('ckecking logic',check)
                 // sending mail
-                forgotMailer.frogotpasswordLink(check,user.email);
+                //forgotMailer.frogotpasswordLink(check,user.email);
                 
+                newforgDetails = {
+                    restepassobj:check,
+                    email : user.email
+                   }
+                   let job= queue.create('forgotpassword',newforgDetails).save(function(err){
+                        if(err){console.log('error isn sending queue',err);return;};
+                        console.log('job enqueued',job.id);
+                    })
+
+
             }else {
 
                 let accesstoken = crypto.randomBytes(20).toString('hex');
@@ -154,8 +167,16 @@ module.exports.forget_passwordEmailSec =async function(req,res){
                     isValid: true
     
                     });
-                    forgotMailer.frogotpasswordLink(restepassobj,user.email);
-                
+                   // forgotMailer.frogotpasswordLink(restepassobj,user.email);
+                   newforgDetails = {
+                    restepassobj:restepassobj,
+                    email : user.email
+                   }
+                   let job= queue.create('forgotpassword',newforgDetails).save(function(err){
+                        if(err){console.log('error isn sending queue',err);return;};
+                        console.log('job enqueued',job.id);
+                    })
+
                     console.log('restll=>',restepassobj)
                 }
            
@@ -191,6 +212,7 @@ module.exports.reset_password =async function(req,res){
 
 //    console.log(req.query.access_token);
    let resrtaccfind = await ResetPassword.findOne({accessToken:req.query.access_token})
+   console.log('cheking restisdsa',resrtaccfind)
     if(resrtaccfind){
         
         console.log(resrtaccfind);
