@@ -22,7 +22,7 @@ const postSchema = new mongoos.Schema({
     likes : [
         {
             type : mongoos.Schema.Types.ObjectId , // here we are refering to object id
-            ref : 'Like'
+            ref : 'Like' // refering to likes
         }
     ]
 },{

@@ -14,7 +14,8 @@
     </body>
 </html> -->
 <link rel="stylesheet" href="/css/home.css">
-
+<!-- chatting engine style taken from main folder -->
+<link rel="stylesheet" href="/css/chat_box.css">
 <h1><%= title %></h1>
 <div id="home-container">
 
@@ -47,6 +48,8 @@
         </p>
     <% } %>
 </section>
+<!-- impoerin chat box -->
+<%- include('_chat_box') -%>
 </div>
 
 <!-- including ejs file -->
@@ -55,6 +58,18 @@
 <!-- includi the script file for async sign-in page -->
 <script src="js/sign_inpage.js"></script>
 <script src="js/sign_uppage.js"></script>
+
+
+<!-- chat engine js file for front end for creating a connections-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+<script src="/js/chat_engine.js"></script>
+<!-- this script runs only if we have user -->
+<% if(locals.user){%>
+<script>
+    new ChatEngine('user-chat-box','<%= locals.user.email %>');
+</script>
+
+<% } %>
 <!-- <section id='all posts'>
     <% for(let i of posts) {%>
         <textarea name="contents" id="" cols="30" rows="3" >   <%= i.content %> </textarea> <br ><br > 

@@ -21,6 +21,14 @@ const sassmiddleWare = require('node-sass-middleware'); // css design middle war
 const flash = require('connect-flash') // for showing flash message
 const customMware = require('./config/middleware') //  getting middle ware
 
+// setting up the chat server to use with socket.io
+// here we are doing for chat server part
+const chatServer = require('http').Server(app); // setting up chat server
+// passing chatServer on this
+const chatSockets = require('./config/chat_socket').chatSockets(chatServer) // impoeting the configurationof our chat file
+chatServer.listen(5000); // making chatServer to listen on port 5000
+console.log('chat server is listining on port 5000');
+
 app.use(sassmiddleWare({
     src:'./assets/scss',
     dest:'./assets/css',
