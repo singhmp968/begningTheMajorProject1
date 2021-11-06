@@ -15,6 +15,13 @@ module.exports.chatSockets = function(socketServer){
             io.in(data.chatroom).emit('user_joined',data) // sendinfg the data .we are emiting in specific chat room othet wise we can do directly emit
 
         }) ;
+
+        // change : detecting send_message from client side i.e chat_engine to broadcast every one in the room
+        socket.on('send_message',function(data){ // data comming from send message
+            // we are emmiting or sending a event to tell that we have join the chat room 
+            // here by doing this we are sending data to the server fro client then we are reciving the data and broacast it 
+            io.in(data.chatroom).emit('recive_message',data);
+        })
     });
 
    

@@ -2,8 +2,11 @@ const nodemailer= require('nodemailer');
 // on google gmail smtp settings
 const ejs = require('ejs')
 const path = require('path');
+const env = require('./enviroment')
 // this is is used to definre the paths
-let transporter = nodemailer.createTransport({
+let transporter = nodemailer.createTransport(
+  // before setting up enviroment.js file  
+  /*{
     service:'gmail',
     host: "smtp.gmail.com",
     port: 587,
@@ -11,8 +14,11 @@ let transporter = nodemailer.createTransport({
     auth: {
       user: 'rahulxinghyadavmp968@gmail.com', // generated ethereal user
       pass: '8409857915', // generated ethereal password
-    },
-  });
+    } }*/
+
+    // after creating developmen in enviroment file
+    env.smtp // this is a abojec as above check in enviroment file
+  );
 
 // this is the path for rrenderingthe templates 
   let renderTemplate = (data,relativePath)=>{

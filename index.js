@@ -1,4 +1,5 @@
 const express  = require('express');
+const env = require('./config/enviroment')
 const app = express();
 const port = 8000;
 const expressLayout = require('express-ejs-layouts');
@@ -28,13 +29,25 @@ const chatServer = require('http').Server(app); // setting up chat server
 const chatSockets = require('./config/chat_socket').chatSockets(chatServer) // impoeting the configurationof our chat file
 chatServer.listen(5000); // making chatServer to listen on port 5000
 console.log('chat server is listining on port 5000');
+// creting path for deploying into developmen org
+const path = require('path');
 
 app.use(sassmiddleWare({
+  /* old before getiing in enviroment.js file  
     src:'./assets/scss',
     dest:'./assets/css',
     debug:true, // this will be set ture if we need to display error if we find any issue while converting scss file to css
     outputStyle:'extended',
     prefix:'/css' // this for node server to find scss file i.e for layoyt 
+    */
+    // new way
+    src:path.join(__dirname,env.asset_path,'scss'),
+    dest:path.join(__dirname,env.asset_path,'css'),
+    debug:true, // this will be set ture if we need to display error if we find any issue while converting scss file to css
+    outputStyle:'extended',
+    prefix:'/css' // this for node server to find scss file i.e for layoyt 
+    
+
 }))
 // make the uploads avaliable to the browsers
 app.use('/uploads',express.static(__dirname + '/uploads')); // for using in image displaying in profile
@@ -45,7 +58,10 @@ app.use(cookieParser()) //setting up the cookie parser
 // we need to implement out layout befor our routes beacause in routes views is going to be render
 app.use(expressLayout);
 // uses express route
-app.use(express.static('./assets'))
+//app.use(express.static('./assets'))//older defore movinf to enviremint.js
+// we are moving './assets' to asset_path in development object in enviroment.js
+//app.use(express.static(env.asset_path)) // passing './asset'
+app.use(express.static(path.join(__dirname, env.asset_path)));
 
 // extract style and scrit from the sub pages
 app.set('layout extractStyles',true);
@@ -61,7 +77,7 @@ app.set('views','./views')
 app.use(session({
     name:'codeial', // neme of the session cookei
     //TODO:change before deployment in production mode
-    secret:'something', // when ever encryption happens there is a key to encode and decode and here we are usinf secrte to enceode and decode
+    secret:env.session_cookie_key, // when ever encryption happens there is a key to encode and decode and here we are usinf secrte to enceode and decode
     saveUninitialized:false,  // whenever there is a request which is nt initilize i.e a session which is not initilize that also mean that the user has not logged in so in that case we don't need to store extra data in session cookie
     resave:false, // in resave if the identity is estiblished or some sort o data is present i.e session data do we need to re-write it? no we dont need to save again
     cookie:{ // giving time limit after which our coookie will get expire
@@ -106,5 +122,6 @@ app.listen(port,function(err){
         console.log(`Error in running the server: ${err}`);
     }
     console.log(`server is running on port ${port}`);
+    console.log('process enviromt',process.env.CODEIAL_ASSET_PATH)
 })
 // hi added some commnets

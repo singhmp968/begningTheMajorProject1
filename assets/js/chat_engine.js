@@ -31,6 +31,42 @@ class ChatEngine {
             console.log('a user joined',data);
         })
     
-    
-    }
+    //sending  message on clicking send message nutton
+        $('#send-message').click(function(){
+            let msg = $('#chat-message-input').val(); // getting th message from the input box
+            if(msg != ''){ // checking if it not empty then we are sendig the message to the observer side
+                self.socket.emit('send_message',{
+                    message:msg,
+                    user_email:self.userEmail,
+                    chatroom: 'codeial'
+                })
+            }
+        
+        });
+        // detecting recive_message
+        self.socket.on('recive_message',function(data){
+            console.log('message recived',data.message)
+       
+
+        let newMessage = $('<li>');
+        let messageType = 'other-message';
+
+        if (data.user_email == self.userEmail){
+            messageType = 'self-message';
+        }// we are checking if data.useremail == the current user tehn we are changing the alignment of the message
+        
+        newMessage.append($('<span>', {
+                'html': data.message
+            }));
+
+        newMessage.append($('<sub>', {
+                'html': data.user_email
+            }));
+
+        newMessage.addClass(messageType); // adding to newMessage to messageType class
+
+        $('#chat-messages-list').append(newMessage); // appending to  chat-message-list
+
+    });
+}
 }
